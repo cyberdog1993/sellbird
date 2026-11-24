@@ -62,6 +62,14 @@ async def test_each_cycle_advances_the_rotation():
     assert '"dental" "Denver, CO" company' in second
 
 
+def test_the_company_word_follows_the_market_language():
+    """A Spanish-language market searches "empresa"; "company" pulled in
+    English-language directories instead of the companies themselves."""
+    scout, _ = _scout(["construcción"], ["Ciudad Ejemplo"])
+    scout.config.icp.company_search_word = "empresa"
+    assert scout._build_company_search_queries() == ['"construcción" "Ciudad Ejemplo" empresa']
+
+
 def test_empty_icp_builds_no_query():
     scout, _ = _scout([], [], company_size="")
     assert scout._build_company_search_queries() == []

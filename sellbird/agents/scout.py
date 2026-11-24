@@ -1201,11 +1201,12 @@ class Scout:
         checked after discovery instead.
         """
         pairs = self._company_search_pairs()
+        word = (getattr(self.config.icp, "company_search_word", "") or "").strip() or "company"
         queries = []
         for i in range(len(pairs)):
             industry, geo = pairs[(offset + i) % len(pairs)]
             parts = [f'"{p}"' for p in (industry, geo) if p]
-            parts.append("company")
+            parts.append(word)
             queries.append(" ".join(parts))
             if len(queries) >= MAX_QUERIES_PER_CYCLE:
                 break
@@ -1215,7 +1216,7 @@ class Scout:
         out = []
         for q in queries:
             q = q.strip()
-            if q and q != "company" and q not in seen:
+            if q and q != word and q not in seen:
                 seen.add(q)
                 out.append(q)
         return out[:MAX_QUERIES_PER_CYCLE]
